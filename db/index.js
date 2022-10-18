@@ -5,28 +5,20 @@ mongoose.connect('mongodb://localhost/sdc-reviews')
     console.log('Connection with reviews database succesful');
   });
 
-// const reviewSchema = new mongoose.Schema({
-//   product_id: Number,
-//   rating: Number,
-//   date: Date,
-//   summary: String,
-//   body: String,
-//   recommend: Boolean,
-//   reported: Boolean,
-//   reviewer_name: String,
-//   reviewer_email: String,
-//   response: String,
-//   helpfulness: Number,
-//   photos: [String],
-//   characteristics: [{
-//     name: String,
-//     value: Number,
-//   }],
-// });
-
-// const Review = mongoose.model('Review', reviewSchema);
-
-const reviewSchema = new mongoose.Schema({});
+const reviewSchema = new mongoose.Schema({
+  id: Number,
+  product_id: Number,
+  rating: Number,
+  date: Number,
+  summary: String,
+  body: String,
+  recommend: String,
+  reported: String,
+  reviewer_name: String,
+  reviewer_email: String,
+  response: String,
+  helpfulness: Number,
+});
 const Review = mongoose.model('Review', reviewSchema, 'reviews');
 
 const characteristicSchema = new mongoose.Schema({});
