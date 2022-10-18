@@ -4,7 +4,12 @@
   "description": "API for the Ratings and Reviews microservice",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "import-reviews": "mongoimport -d sdc-reviews -c reviews --type csv etl/data/reviews.csv --headerline",
+    "import-characteristics": "mongoimport -d sdc-reviews -c characteristics --type csv etl/data/characteristics.csv --headerline",
+    "import-characteristics-reviews": "mongoimport -d sdc-reviews -c characteristic_reviews --type csv etl/data/characteristic_reviews.csv --headerline",
+    "import-reviews-photos": "mongoimport -d sdc-reviews -c reviews_photos --type csv etl/data/reviews_photos.csv --headerline",
+    "import-everything": "npm run import-reviews && npm run import-characteristics && npm run import-characteristics-reviews && npm run import-reviews-photos"
   },
   "repository": {
     "type": "git",
@@ -24,5 +29,17 @@
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest": "^29.0.3"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "csv": "^6.2.0",
+    "csv-parse": "^5.3.0",
+    "csv-parser": "^3.0.0",
+    "csvtojson": "^2.0.10",
+    "jquery": "^3.6.1",
+    "jquery-csv": "^1.0.21",
+    "mongoose": "^6.6.2",
+    "papaparse": "^5.3.2",
+    "xlsx": "^0.18.5"
   }
 }
