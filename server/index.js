@@ -34,7 +34,29 @@ app.get('/reviews', async (req, res) => {
 
 app.get('/reviews/meta', (req, res) => {
   const result = {};
-  result.product_id = req.params.product_id;
+  result.product_id = Number(req.query.product_id);
+  result.ratings = {};
+  result.recommended = { 0: 0, 1: 0 };
+  result.characteristics = {};
+  getReviewsForProductId(req.query.product_id).then((data) => {
+    data.forEach((review) => {
+      // set the ratings
+      if (result.ratings[review.rating] === undefined) {
+        result.ratings[review.rating] = 1;
+      } else {
+        result.ratings[review.rating] += 1;
+      }
+      console.log(review.recommended);
+      // set the recommended
+      if (review.recommend === 'true') {
+        result.recommended['1'] += 1;
+      } else {
+        result.recommended['0'] += 1;
+      }
+    });
+  }).then(() => {
+    res.send(result);
+  });
 });
 
 app.listen(port, () => {
