@@ -12,9 +12,10 @@ app.get('/', (req, res) => {
 
 app.get('/reviews', async (req, res) => {
   const result = {};
-  result.product = JSON.stringify(req.params.product_id) || 1;
-  result.page = req.params.page || 1;
-  result.count = req.params.count || 5;
+  console.log('this is the params: ', req.query.product_id);
+  result.product = Number(req.query.product_id) || 1;
+  result.page = Number(req.query.page) || 1;
+  result.count = Number(req.query.count) || 5;
   getReviewsForProductId(req.query.product_id).then((data) => {
     result.results = data;
     return Promise.all(result.results.map((review) => {
@@ -26,9 +27,14 @@ app.get('/reviews', async (req, res) => {
       });
     }));
   }).then((withPhotos) => {
-    console.log(withPhotos);
-    res.send(withPhotos);
+    result.results = withPhotos;
+    res.send(result);
   });
+});
+
+app.get('/reviews/meta', (req, res) => {
+  const result = {};
+  result.product_id = req.params.product_id;
 });
 
 app.listen(port, () => {
