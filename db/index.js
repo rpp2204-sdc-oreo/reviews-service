@@ -21,10 +21,19 @@ const reviewSchema = new mongoose.Schema({
 });
 const Review = mongoose.model('Review', reviewSchema, 'reviews');
 
-const characteristicSchema = new mongoose.Schema({});
+const characteristicSchema = new mongoose.Schema({
+  id: Number,
+  product_id: Number,
+  name: String,
+});
 const Characteristic = mongoose.model('Characteristic', characteristicSchema, 'characteristics');
 
-const characteristicReviewSchema = new mongoose.Schema({});
+const characteristicReviewSchema = new mongoose.Schema({
+  id: Number,
+  characteristic_id: Number,
+  review_id: Number,
+  value: Number,
+});
 const CharacteristicReview = mongoose.model('CharacteristicReview', characteristicReviewSchema, 'characteristic_reviews');
 
 const reviewPhotosSchema = new mongoose.Schema({

@@ -2,6 +2,8 @@
 const express = require('express');
 const getReviewsForProductId = require('./helpers/getReviewsForProductId');
 const getPhotosForReviewId = require('./helpers/getPhotosForReviewId');
+const getCharacteristicsForProductId = require('./helpers/getCharacteristicsForProductId');
+const getValueForCharacteristicId = require('./helpers/getValueForCharacteristicId');
 
 const app = express();
 const port = 3000;
@@ -32,6 +34,110 @@ app.get('/reviews', async (req, res) => {
   });
 });
 
+// app.get('/reviews/meta', (req, res) => {
+//   const result = {};
+//   result.product_id = Number(req.query.product_id);
+//   result.ratings = {};
+//   result.recommended = { 0: 0, 1: 0 };
+//   result.characteristics = {};
+//   getCharacteristicsForProductId(req.query.product_id).then((chars) => {
+//     chars.forEach((char) => {
+//       result.characteristics[char.name] = {};
+//       // getValueForCharacteristicId(char.id).then;
+//     });
+//   });
+//   getReviewsForProductId(req.query.product_id).then((data) => {
+//     data.forEach((review) => {
+//       // set the ratings
+//       if (result.ratings[review.rating] === undefined) {
+//         result.ratings[review.rating] = 1;
+//       } else {
+//         result.ratings[review.rating] += 1;
+//       }
+//       // set the recommended
+//       if (review.recommend === 'true') {
+//         result.recommended['1'] += 1;
+//       } else {
+//         result.recommended['0'] += 1;
+//       }
+
+//       // set the characteristics
+//     });
+//   }).then(() => {
+//     res.send(result);
+//   });
+// });
+
+// app.get('/reviews/meta', (req, res) => {
+//   const result = {};
+//   result.product_id = Number(req.query.product_id);
+//   result.ratings = {};
+//   result.recommended = { 0: 0, 1: 0 };
+//   result.characteristics = {};
+//   getReviewsForProductId(req.query.product_id).then((data) => {
+//     data.forEach((review) => {
+//       if (result.ratings[review.rating] === undefined) {
+//         result.ratings[review.rating] = 1;
+//       } else {
+//         result.ratings[review.rating] += 1;
+//       }
+
+//       if (review.recommend === 'true') {
+//         result.recommended['1'] += 1;
+//       } else {
+//         result.recommended['0'] += 1;
+//       }
+//     });
+//   }).then(() => {
+//     getCharacteristicsForProductId(req.query.product_id).then((chars) => {
+//       chars.forEach((char) => {
+//         result.characteristics[char.name] = {};
+//         getValueForCharacteristicId(char.id).then((value) => {
+//           result.characteristics[char.name].value = value;
+//         });
+//       });
+//     }).then(() => {
+//       console.log(result);
+//       res.end();
+//     });
+//   });
+// });
+
+// app.get('/reviews/meta', (req, res) => {
+//   const result = {};
+//   result.product_id = Number(req.query.product_id);
+//   result.ratings = {};
+//   result.recommended = { 0: 0, 1: 0 };
+//   result.characteristics = {};
+//   getReviewsForProductId(req.query.product_id).then((data) => {
+//     data.forEach((review) => {
+//       if (result.ratings[review.rating] === undefined) {
+//         result.ratings[review.rating] = 1;
+//       } else {
+//         result.ratings[review.rating] += 1;
+//       }
+
+//       if (review.recommend === 'true') {
+//         result.recommended['1'] += 1;
+//       } else {
+//         result.recommended['0'] += 1;
+//       }
+//     });
+//   }).then(() => {
+//     getCharacteristicsForProductId(req.query.product_id)
+//       .then((chars) => Promise.all(chars.map((char) => {
+//         result.characteristics[char.name] = {};
+//         return getValueForCharacteristicId(char.id).then((value) => {
+//           console.log(`the value is ${value}`);
+//           result.characteristics[char.name].value = value;
+//         });
+//       }))).then(() => {
+//         console.log(result);
+//         res.end();
+//       });
+//   });
+// });
+
 app.get('/reviews/meta', (req, res) => {
   const result = {};
   result.product_id = Number(req.query.product_id);
@@ -40,22 +146,36 @@ app.get('/reviews/meta', (req, res) => {
   result.characteristics = {};
   getReviewsForProductId(req.query.product_id).then((data) => {
     data.forEach((review) => {
-      // set the ratings
       if (result.ratings[review.rating] === undefined) {
         result.ratings[review.rating] = 1;
       } else {
         result.ratings[review.rating] += 1;
       }
-      console.log(review.recommended);
-      // set the recommended
+
       if (review.recommend === 'true') {
         result.recommended['1'] += 1;
       } else {
         result.recommended['0'] += 1;
       }
+      getCharacteristicsForProductId(req.query.product_id)
+        .then((chars) => Promise.all(chars.map((char) => {
+          result.characteristics[char.name] = {};
+          return getValueForCharacteristicId(review.id, char.id).then((value) => {
+            console.log(`the value is ${value}`);
+            result.characteristics[char.name].value = value;
+          });
+        }))).then(() => {
+          console.log(result);
+          res.end();
+        });
     });
-  }).then(() => {
-    res.send(result);
+  });
+});
+
+app.get('/test', (req, res) => {
+  getValueForCharacteristicId(2, 1).then((value) => {
+    console.log(value);
+    res.end();
   });
 });
 
