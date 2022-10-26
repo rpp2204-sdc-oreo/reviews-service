@@ -161,14 +161,16 @@ app.get('/reviews/meta', (req, res) => {
         .then((chars) => Promise.all(chars.map((char) => {
           result.characteristics[char.name] = {};
           return getValueForCharacteristicId(review.id, char.id).then((value) => {
-            console.log(`the value is ${value}`);
-            result.characteristics[char.name].value = value;
+            // console.log(`the value is ${value}`);
+            result.characteristics[char.name].value = value[0].value;
           });
         }))).then(() => {
           console.log(result);
-          res.end();
+          // res.send(result);
         });
     });
+  }).then(() => {
+    res.send(result);
   });
 });
 
