@@ -1,0 +1,1 @@
+ssh -i "reviewsDB.pem" ubuntu@ec2-18-188-55-9.us-east-2.compute.amazonaws.com
