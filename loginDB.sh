@@ -1,0 +1,1 @@
+ssh -i "/Users/javiercampos/Desktop/Hack Reactor/SDC/rr-service/reviewsDB.pem" ubuntu@ec2-18-223-44-201.us-east-2.compute.amazonaws.com
