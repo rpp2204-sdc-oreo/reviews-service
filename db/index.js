@@ -1,10 +1,16 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/sdc-reviews')
+// mongoose.connect('mongodb://localhost/sdc-reviews')
+//   .then(() => {
+//     console.log('Connection with reviews database succesful');
+//   });
+
+mongoose.connect('mongodb://3.22.168.19:27017/sdc-reviews')
   .then(() => {
     console.log('Connection with reviews database succesful');
-  });
-
+  }).catch((error) => console.log(error));
+// db.reviews_photos.createIndex({ product_id: 1 });
+// ?authSource=admin
 const reviewSchema = new mongoose.Schema({
   id: Number,
   product_id: Number,
