@@ -1,16 +1,32 @@
 /* eslint-disable camelcase */
 const express = require('express');
+const redis = require('redis');
 const getReviewsForProductId = require('./helpers/getReviewsForProductId');
 const getPhotosForReviewId = require('./helpers/getPhotosForReviewId');
 
 const app = express();
 const port = 3000;
+const redisPort = 6379;
+
+const client = redis.createClient(redisPort);
+client.connect();
+
+const cache = async (req, res, next) => {
+  console.log(`This is the product id from the middleware: ${req.query.product_id}`);
+  const data = await client.get(req.query.product_id);
+  if (data !== null) {
+    console.log(`This is the data from the cache!!: ${data}`);
+    res.send(JSON.parse(data));
+  } else {
+    next();
+  }
+};
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/reviews', async (req, res) => {
+app.get('/reviews', cache, async (req, res) => {
   const result = {};
   console.log('this is the params: ', req.query.product_id);
   result.product = Number(req.query.product_id) || 1;
@@ -28,6 +44,7 @@ app.get('/reviews', async (req, res) => {
     }));
   }).then((withPhotos) => {
     result.results = withPhotos;
+    client.SETEX(req.query.product_id, 300, JSON.stringify(result));
     res.send(result);
   });
 });

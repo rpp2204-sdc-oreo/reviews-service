@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 //     console.log('Connection with reviews database succesful');
 //   });
 
-mongoose.connect('mongodb://18.117.115.16:27017/sdc-reviews')
+mongoose.connect('mongodb://3.137.144.145:27017/sdc-reviews')
   .then(() => {
     console.log('Connection with reviews database succesful');
   }).catch((error) => console.log(error));
